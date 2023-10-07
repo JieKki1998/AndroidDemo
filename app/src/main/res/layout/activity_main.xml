@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/RLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:background="#2200BCD4"
+        android:id="@+id/image_test"
+        android:layout_width="1366px"
+        android:layout_height="768px"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="7dp"
+        android:src="@android:drawable/ic_menu_gallery">
+
+    </ImageView>
+
+
+    <ImageView
+        android:id="@+id/image_camera"
+        android:layout_width="125dp"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="78dp"
+        android:layout_marginTop="544dp"
+        android:layout_marginBottom="140dp"
+        android:src="@android:drawable/ic_menu_camera">
+
+    </ImageView>
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="130dp"
+        android:layout_height="43dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="276dp"
+        android:layout_marginTop="550dp"
+        android:layout_marginEnd="55dp"
+        android:text="相册"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="354dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="309dp" />
+
+    <LinearLayout
+        android:id="@+id/rgb_layout"
+        android:layout_width="309dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="459dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_r"
+                android:layout_width="45dp"
+                android:layout_height="15dp"
+                android:text="R:">
+
+            </TextView>
+
+            <SeekBar
+
+                android:id="@+id/SeekBar_R"
+                android:layout_width="200dp"
+                android:layout_height="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:progressDrawable="@drawable/seekbar_r">
+
+            </SeekBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_g"
+                android:layout_width="45dp"
+                android:layout_height="15dp"
+                android:text="G:">
+
+            </TextView>
+
+            <SeekBar
+                android:id="@+id/SeekBar_G"
+                android:layout_width="200dp"
+                android:layout_height="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:progressDrawable="@drawable/seekbar_g">
+
+            </SeekBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:id="@+id/tv_b"
+                android:layout_width="45dp"
+                android:layout_height="15dp"
+                android:text="B:">
+
+            </TextView>
+
+            <SeekBar
+
+                android:id="@+id/SeekBar_B"
+                android:layout_width="200dp"
+                android:layout_height="15dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:progressDrawable="@drawable/seekbar_b">
+
+            </SeekBar>
+        </LinearLayout><LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+
+        >
+
+        <TextView
+            android:id="@+id/tv_Gray"
+            android:layout_width="45dp"
+            android:layout_height="15dp"
+            android:text="灰:">
+
+        </TextView>
+
+        <SeekBar
+            android:id="@+id/SeekBar_Gray"
+            android:layout_width="200dp"
+            android:layout_height="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:progressDrawable="@drawable/seekbar_gray"
+            >
+
+        </SeekBar>
+    </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/xy_layout"
+        android:layout_width="246dp"
+        android:layout_height="66dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="114dp"
+        android:layout_marginTop="331dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="x坐标"
+            android:textSize="14sp">
+
+        </TextView>
+
+        <EditText
+            android:id="@+id/intput_X"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:focusable="false"
+            android:hint="">
+
+        </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="y坐标"
+            android:textSize="14sp"></TextView>
+
+        <EditText
+            android:id="@+id/intput_y"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:focusable="false"
+            android:hint="">
+
+        </EditText>
+
+        <Button
+            android:id="@+id/btn_pick_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="15dp"
+            android:text="取色"
+            android:visibility="invisible" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_analysis"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/btn"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="274dp"
+        android:layout_marginTop="7dp"
+        android:textSize="10sp"
+        android:text="analysis" />
+
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/btn_analysis"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="273dp"
+        android:layout_marginTop="4dp"
+        android:textSize="10sp"
+        android:text="ClearData" />
+
+
+</RelativeLayout>
