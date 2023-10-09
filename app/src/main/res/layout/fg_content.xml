@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    >
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_expfunction"
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="50dp"
+            android:textSize="8sp"
+            android:text="公式"
+            android:textAlignment="center" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="378dp"
+            android:layout_height="287dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="29dp">
+
+        </com.github.mikephil.charting.charts.LineChart>
+
+        <com.github.mikephil.charting.charts.ScatterChart
+            android:id="@+id/scatter_chart"
+            android:layout_width="378dp"
+            android:layout_height="287dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="29dp"/>
+
+        <TextView
+            android:id="@+id/tv_xTitle"
+            android:layout_width="73dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lineChart"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="3dp"
+            android:text="浓度"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tv_yTitle"
+            android:layout_width="71dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lineChart"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="-312dp"
+            android:text="灰度"
+            android:textAlignment="center" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_adapt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="拟合">
+
+    </Button>
+</LinearLayout>

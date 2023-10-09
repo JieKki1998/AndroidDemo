@@ -38,8 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity {
-    ImageView imageView_test,image_camera;
-    Button btn,btn_pick_color,btn_analysis;
+    ImageView imageView_test,image_camera,image_gallery;
+    Button btn_analysis;
     SeekBar SeekBar_R,SeekBar_G,SeekBar_B,SeekBar_Gray;
     TextView textView,tv_r,tv_g,tv_b,tv_Gray;
     Bitmap targetBitmap;
@@ -102,7 +102,6 @@ public class MainActivity extends Activity {
                 if (targetBitmap!=null){
                     Log.i("btn_pick_color", targetBitmap.toString()+"\n当前图片大小"+targetBitmap.getWidth()+","+targetBitmap.getHeight());
                     if (dstX>0&&dstY>0&&dstX<targetBitmap.getWidth()&&dstY<targetBitmap.getHeight()){
-//                        entries.add(new Entry(dstX,dstY));
                         list.add(getGray(targetBitmap,dstX,dstY));
                     }else {
                         Log.i("btn_pick_color","坐标("+x+","+y+")不合法");
@@ -143,7 +142,7 @@ public class MainActivity extends Activity {
                 }
             }
         });*/
-        btn.setOnClickListener(new View.OnClickListener() {
+        image_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(Intent.ACTION_PICK).setType("image/*"),PICK_PHOTO_REQUEST);
@@ -159,7 +158,6 @@ public class MainActivity extends Activity {
                     startActivity(intent);
                 }
                 else Toast.makeText(MainActivity.this,"请添加数据后再进行分析",Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -180,7 +178,7 @@ public class MainActivity extends Activity {
     private void initView() {
         imageView_test = findViewById(R.id.image_test);
         image_camera = findViewById(R.id.image_camera);
-        btn = findViewById(R.id.btn);
+        image_gallery = findViewById(R.id.image_gallery);
         btn_analysis=findViewById(R.id.btn_analysis);
         input_x=findViewById(R.id.intput_X);
         input_y=findViewById(R.id.intput_y);
@@ -198,7 +196,6 @@ public class MainActivity extends Activity {
         SeekBar_Gray.setMax(255);
         SeekBar_Gray.setProgress(0);
         textView = findViewById(R.id.textView);
-
         tv_r = findViewById(R.id.tv_r);
         tv_g = findViewById(R.id.tv_g);
         tv_b = findViewById(R.id.tv_b);

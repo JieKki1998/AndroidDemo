@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="xMin:"></TextView>
+        <EditText
+            android:id="@+id/et_xMin"
+            android:layout_width="85dp"
+            android:layout_height="50dp"
+            android:numeric="integer"
+            >
+
+        </EditText>
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="xMax:">
+
+        </TextView>
+        <EditText
+            android:id="@+id/et_xMax"
+            android:layout_width="85dp"
+            android:layout_height="50dp"
+            android:numeric="integer"
+            >
+
+        </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="yMin:"></TextView>
+        <EditText
+            android:id="@+id/et_yMin"
+            android:layout_width="85dp"
+            android:layout_height="50dp"
+            android:numeric="integer"
+            >
+
+        </EditText>
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="yMax:"></TextView>
+        <EditText
+            android:id="@+id/et_yMax"
+            android:layout_width="85dp"
+            android:layout_height="50dp"
+            android:numeric="integer"
+            >
+
+        </EditText>
+    </LinearLayout>
+
+</LinearLayout>
