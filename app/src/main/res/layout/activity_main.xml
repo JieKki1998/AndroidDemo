@@ -19,8 +19,22 @@
             android:layout_marginTop="7dp"
             android:src="@android:drawable/gallery_thumb">
         </ImageView>
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/layout_show_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp">
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:id="@+id/imageView_absorbcolor"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@mipmap/ic"
+                android:src="@mipmap/ic">
+            </ImageView>
+        </LinearLayout>
 
+
+    </RelativeLayout>
     <TextView
         android:id="@+id/textView"
         android:layout_width="355dp"
@@ -62,6 +76,15 @@
             android:hint="">
         </EditText>
 
+        <Button
+            android:layout_marginStart="5dp"
+            android:id="@+id/btn_select"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="select">
+
+        </Button>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/rgb_layout"
@@ -85,7 +108,6 @@
                 android:layout_width="45dp"
                 android:layout_height="15dp"
                 android:text="R:">
-
             </TextView>
 
             <SeekBar
@@ -114,7 +136,6 @@
                 android:layout_width="45dp"
                 android:layout_height="15dp"
                 android:text="G:">
-
             </TextView>
 
             <SeekBar
@@ -142,7 +163,6 @@
                 android:layout_width="45dp"
                 android:layout_height="15dp"
                 android:text="B:">
-
             </TextView>
 
             <SeekBar

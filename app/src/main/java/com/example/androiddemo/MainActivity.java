@@ -3,48 +3,54 @@ package com.example.androiddemo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Outline;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import com.github.mikephil.charting.data.Entry;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     ImageView imageView_test,image_camera,image_gallery;
-    Button btn_analysis;
+    Button btn_analysis,btn_select;
     SeekBar SeekBar_R,SeekBar_G,SeekBar_B,SeekBar_Gray;
     TextView textView,tv_r,tv_g,tv_b,tv_Gray;
+    LinearLayout layout_show_color;
+    ImageView imageView_absorbcolor;
     Bitmap targetBitmap;
+    Intent data1;
     EditText input_x,input_y;
     int x,y;
+    int dstX,dstY;
     int TAKE_PHOTO_REQUEST = 10010;
     int PICK_PHOTO_REQUEST = 1234;
     int RESULT_CANCELED = 0;
@@ -67,6 +73,7 @@ public class MainActivity extends Activity {
             }
         }
         initView();
+
         imageView_test.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -83,8 +90,8 @@ public class MainActivity extends Activity {
                 imageMatrix.invert(inverseMatrix);
                 // 通过逆矩阵映射得到目标点 dst 的值
                 inverseMatrix.mapPoints(dst, new float[]{x1, y1});
-                int dstX = (int) dst[0];
-                int dstY = (int) dst[1];
+                dstX= (int) dst[0];
+                dstY = (int) dst[1];
                 Log.i("dstX,dstY:", dstX+ ","+dstY);
                 // 判断dstX, dstY在Bitmap上的位置即可
 /*————————————————
@@ -99,16 +106,28 @@ public class MainActivity extends Activity {
                 原文链接：https://blog.csdn.net/weixin_39950081/article/details/111803149*/
                 input_x.setText(dstX+"");
                 input_y.setText(dstY+"");
-                if (targetBitmap!=null){
-                    Log.i("btn_pick_color", targetBitmap.toString()+"\n当前图片大小"+targetBitmap.getWidth()+","+targetBitmap.getHeight());
-                    if (dstX>0&&dstY>0&&dstX<targetBitmap.getWidth()&&dstY<targetBitmap.getHeight()){
+                //修改imageview的位置
+                if (motionEvent.getAction()==MotionEvent.ACTION_DOWN)
+                {
+                    if (targetBitmap!=null){
+                        Log.i("btn_pick_color", targetBitmap.toString()+"\n当前图片大小"+targetBitmap.getWidth()+","+targetBitmap.getHeight());
+   /*                 if (dstX>0&&dstY>0&&dstX<targetBitmap.getWidth()&&dstY<targetBitmap.getHeight()){
                         list.add(getGray(targetBitmap,dstX,dstY));
                     }else {
                         Log.i("btn_pick_color","坐标("+x+","+y+")不合法");
-                    }
 
-                }else Toast.makeText(MainActivity.this,"请添加图片后再试",Toast.LENGTH_LONG).show();
-                return false;
+                    }*/
+                        getGray(dstX,dstY);
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) layout_show_color.getLayoutParams();
+                        layoutParams.leftMargin = (int) (0+x1);
+                        layoutParams.topMargin = (int) (0+y1-15);
+
+//                    Log.i("坐标",imageView.getLeft()+","+imageView.getTop());
+                        layout_show_color.setLayoutParams(layoutParams);
+                    }else Toast.makeText(MainActivity.this,"请添加图片后再试",Toast.LENGTH_LONG).show();
+                }
+
+                return true;
             }
         });
         findViewById(R.id.btn_clear).setOnClickListener(new View.OnClickListener() {
@@ -161,6 +180,21 @@ public class MainActivity extends Activity {
             }
         });
 
+        btn_select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (targetBitmap!=null){
+                    Log.i("btn_select", targetBitmap.toString()+"\n当前图片大小"+targetBitmap.getWidth()+","+targetBitmap.getHeight());
+                    if (dstX>0&&dstY>0&&dstX<targetBitmap.getWidth()&&dstY<targetBitmap.getHeight()){
+                        list.add(getGray(dstX,dstY));
+                    }else {
+                        Log.i("btn_select","坐标("+x+","+y+")不合法");
+                    }
+                }else Toast.makeText(MainActivity.this,"请添加图片后再试",Toast.LENGTH_LONG).show();
+
+
+            }
+        });
         image_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,15 +205,26 @@ public class MainActivity extends Activity {
 
     }
 
+    private void getTargetBitmapRGB(Bitmap targetBitmap) {
+        int rgbPixel = targetBitmap.getPixel(x, y);
+        int r,g,b,gray;
+        r=Color.red(rgbPixel);
+        g=Color.green(rgbPixel);
+        b=Color.blue(rgbPixel);
+    }
+
     private void clearData() {
         list = new ArrayList<>();
     }
 
     private void initView() {
+        layout_show_color=findViewById(R.id.layout_show_color);
+        imageView_absorbcolor =findViewById(R.id.imageView_absorbcolor);
         imageView_test = findViewById(R.id.image_test);
         image_camera = findViewById(R.id.image_camera);
         image_gallery = findViewById(R.id.image_gallery);
         btn_analysis=findViewById(R.id.btn_analysis);
+        btn_select=findViewById(R.id.btn_select);
         input_x=findViewById(R.id.intput_X);
         input_y=findViewById(R.id.intput_y);
         //SeekBar使用http://t.csdn.cn/8gFFM
@@ -231,6 +276,7 @@ public class MainActivity extends Activity {
                     targetBitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(data.getData()));
                     Log.i("TAG", "从相册回传bitmap："+targetBitmap);
                     /*需要裁剪图片http://t.csdn.cn/mavhX*/
+                    data1=data;
                     imageView_test.setImageBitmap(targetBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -243,12 +289,13 @@ public class MainActivity extends Activity {
         }
 
     }
-    int getGray(Bitmap bitmap,int x,int y){
+    int getGray(int x,int y){
         int rgbPixel = targetBitmap.getPixel(x, y);
         int r,g,b,gray;
         r=Color.red(rgbPixel);
         g=Color.green(rgbPixel);
         b=Color.blue(rgbPixel);
+        layout_show_color.setBackgroundColor(Color.rgb(r,g,b));
         gray=(r*30+g*59+b*11)/100;
 //                textView.setText("rgb: r---" + Color.red(rgbPixel) + "  g-- " + Color.green(rgbPixel) +" b--"+Color.blue(rgbPixel));
         Log.i("JieKki", "pixel: " + Integer.toHexString(rgbPixel));

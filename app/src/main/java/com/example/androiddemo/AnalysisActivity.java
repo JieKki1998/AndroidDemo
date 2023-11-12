@@ -3,12 +3,17 @@ package com.example.androiddemo;
 import static java.lang.Math.sqrt;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +34,9 @@ import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AnalysisActivity extends AppCompatActivity {
@@ -37,6 +44,7 @@ public class AnalysisActivity extends AppCompatActivity {
     List<Integer> list;
     private DrawerLayout drawer_layout;
     private FrameLayout fly_content;
+
     private RightFragment fg_right_menu;
     private FragmentManager fManager;
     //设置数据
@@ -56,6 +64,9 @@ public class AnalysisActivity extends AppCompatActivity {
         cFragment1.setList(list);
         fManager.beginTransaction().replace(R.id.fly_content,cFragment1).commit();
         fg_right_menu.setList(list);
+
+
+
     }
 
     private void initViews() {

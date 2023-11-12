@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ public class ContentFragment extends Fragment {
     boolean adaptflag=false;
     double R方=0.2f;
     Button btn_adapt;
+
     TextView tv_expfunction,tv_xTitle,tv_yTitle;
     LineChart lineChart;
     ScatterChart scatterChart;
@@ -72,6 +75,7 @@ public class ContentFragment extends Fragment {
 
 
     private void initViews() {
+
         lineChart= (LineChart) view.findViewById(R.id.lineChart);
         scatterChart=view.findViewById(R.id.scatter_chart);
         tv_expfunction = view.findViewById(R.id.tv_expfunction);
@@ -149,6 +153,7 @@ public class ContentFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 drawLineChart(line_entries);
+
             }
         });
     }

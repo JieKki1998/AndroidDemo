@@ -16,4 +16,5 @@
         android:layout_gravity="end"
         android:tag="RIGHT"
         tools:layout="@layout/fg_right" />
+
 </androidx.drawerlayout.widget.DrawerLayout>
