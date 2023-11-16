@@ -1,16 +1,31 @@
 package com.example.androiddemo;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
+import com.kyleduo.switchbutton.SwitchButton;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class DialogUtils {
     /**
@@ -30,11 +45,35 @@ public class DialogUtils {
         customizeDialog.setMessage("Message");
         /*初始化自定义dialog布局的控件*/
         EditText et_xMin,et_xMax,et_yMin,et_yMax;
+        SwitchButton x_gridLine,y_gridLine;
         et_xMin = dialogView.findViewById(R.id.et_xMin);
         et_xMax = dialogView.findViewById(R.id.et_xMax);
         et_yMin = dialogView.findViewById(R.id.et_yMin);
         et_yMax = dialogView.findViewById(R.id.et_yMax);
         SharedPreferences sp = activity.getSharedPreferences("axis_sp_info", Context.MODE_PRIVATE);
+        boolean show_x_gridLine=false,show_y_gridLine=false;
+        show_x_gridLine=sp.getBoolean("show_x_gridLine",true);
+        show_y_gridLine=sp.getBoolean("show_y_gridLine",true);
+        x_gridLine=dialogView.findViewById(R.id.x_gridLine);
+        y_gridLine=dialogView.findViewById(R.id.y_gridLine);
+        x_gridLine.setChecked(show_x_gridLine);
+        y_gridLine.setChecked(show_y_gridLine);
+        SharedPreferences.Editor edit = sp.edit();
+        x_gridLine.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                edit.putBoolean("show_x_gridLine",b);
+                edit.apply();//提交数据保存
+            }
+        });
+        y_gridLine.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                edit.putBoolean("show_y_gridLine",b);
+                edit.apply();//提交数据保存
+            }
+        });
+
         int xMin = sp.getInt("xMin",0);
         int xMax = sp.getInt("xMax",0);
         int yMin = sp.getInt("yMin",0);
@@ -43,6 +82,7 @@ public class DialogUtils {
         et_xMax.setText(xMax+"");
         et_yMin.setText(yMin+"");
         et_yMax.setText(yMax+"");
+        x_gridLine.getText().toString();
         customizeDialog.setPositiveButton("确定",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -60,16 +100,15 @@ public class DialogUtils {
                         if (yMax.length()==0)提示信息啊+="yMax不能为空！请重试\n";
                         if (提示信息啊.length()!=0) showNormalDialog(activity,提示信息啊);
                         else {/*数据校验通过*/
-                            contentFragment.setChartXY(Integer.valueOf(xMin),Integer.valueOf(xMax),Integer.valueOf(yMin),Integer.valueOf(yMax));
-                            fManager.beginTransaction().replace(R.id.fly_content,contentFragment).commit();
-                            // 登录成功记录本次登录信息
-                            SharedPreferences sp = dialogView.getContext().getSharedPreferences("axis_sp_info", Context.MODE_PRIVATE);
+
                             SharedPreferences.Editor edit = sp.edit();
                             edit.putInt("xMin",Integer.valueOf(xMin));
                             edit.putInt("xMax",Integer.valueOf(xMax));
                             edit.putInt("yMin",Integer.valueOf(yMin));
                             edit.putInt("yMax",Integer.valueOf(yMax));
                             edit.apply();//提交数据保存
+                            contentFragment.setChartXY(Integer.valueOf(xMin),Integer.valueOf(xMax),Integer.valueOf(yMin),Integer.valueOf(yMax));
+                            fManager.beginTransaction().replace(R.id.fly_content,contentFragment).commit();
 /*————————————————
                             版权声明：本文为CSDN博主「顽石九变」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
                             原文链接：https://blog.csdn.net/wlddhj/article/details/127820069*/
@@ -147,6 +186,60 @@ public class DialogUtils {
         });
         customizeDialog.show();
     }
+
+    public static void ShowEditListDialog(AppCompatActivity activity , FragmentManager fManager, List<Integer> list1,List<Integer> list2, int model) {
+        AlertDialog.Builder customizeDialog =
+                new AlertDialog.Builder(activity);
+        final View dialogView = LayoutInflater.from(activity)
+                .inflate(R.layout.dialog_list_layout,null);//dialog_update_password.xml布局文件可以弄得再高大上一些，但是我懒！！！
+        customizeDialog.setTitle("修改list");
+        customizeDialog.setView(dialogView);
+        customizeDialog.setMessage("Model:"+model);
+        /*初始化自定义dialog布局的控件*/
+        ListView list_one=dialogView.findViewById(R.id.list_one);
+        MyListAdapter mAdapter=null;
+        if (model==1){
+            mAdapter= new MyListAdapter(list1,dialogView.getContext());
+        }
+        if (model==2){
+            mAdapter = new MyListAdapter(list2,dialogView.getContext());
+        }
+        list_one.setAdapter(mAdapter);
+
+        customizeDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ContentFragment cFragment=null;
+                        if (model==1){
+                            cFragment = new ContentFragment(list1);
+                        }
+                        if (model==2)
+                        {
+                            cFragment= new ContentFragment(list1, list2);
+                        }
+                        fManager.beginTransaction().replace(R.id.fly_content,cFragment).commit();
+
+                        dialog.dismiss();
+                    }
+                });
+        customizeDialog.setNegativeButton("取消",new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+//        customizeDialog.show();
+        Window window = customizeDialog.show().getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+//        WindowManager m = activity.getWindowManager();
+//        Display d = m.getDefaultDisplay();                      // 获取屏幕宽、高用
+//        WindowManager.LayoutParams p = window.getAttributes();  // 获取对话框当前的参数值
+//        p.height = (int) (d.getHeight() * 0.2);                 // 改变的是dialog框在屏幕中的位置而不是大小
+//        p.width = (int) (d.getWidth() * 0.65);                  // 宽度设置为屏幕的0.65
+//        window.setAttributes(p);
+    }
+
     public static void showNormalDialog(AppCompatActivity activity, String message){
         /* @setIcon 设置对话框图标
          * @setTitle 设置对话框标题

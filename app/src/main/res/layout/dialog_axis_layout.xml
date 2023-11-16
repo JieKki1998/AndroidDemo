@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="zhangphil.demo.MainActivity"
+    >
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -11,11 +15,28 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="10sp"
             android:text="xMin:"></TextView>
         <EditText
             android:id="@+id/et_xMin"
-            android:layout_width="85dp"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:textSize="10sp"
+            android:numeric="integer"
+            >
+
+        </EditText>
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="xMax:">
+
+        </TextView>
+        <EditText
+            android:id="@+id/et_xMax"
+            android:layout_width="70dp"
             android:layout_height="50dp"
             android:numeric="integer"
             >
@@ -25,18 +46,16 @@
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text="xMax:">
+            android:textSize="10sp"
+            android:text="x网格线:">
 
         </TextView>
-        <EditText
-            android:id="@+id/et_xMax"
-            android:layout_width="85dp"
-            android:layout_height="50dp"
-            android:numeric="integer"
-            >
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/x_gridLine"
+            android:layout_width="60dp"
+            android:layout_height="35dp">
 
-        </EditText>
+        </com.kyleduo.switchbutton.SwitchButton>
     </LinearLayout>
 
     <LinearLayout
@@ -47,11 +66,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="10sp"
             android:text="yMin:"></TextView>
         <EditText
             android:id="@+id/et_yMin"
-            android:layout_width="85dp"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:textSize="10sp"
+            android:numeric="integer"
+            >
+
+        </EditText>
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="yMax:"></TextView>
+        <EditText
+            android:id="@+id/et_yMax"
+            android:layout_width="70dp"
             android:layout_height="50dp"
             android:numeric="integer"
             >
@@ -61,16 +95,17 @@
             android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text="yMax:"></TextView>
-        <EditText
-            android:id="@+id/et_yMax"
-            android:layout_width="85dp"
-            android:layout_height="50dp"
-            android:numeric="integer"
-            >
+            android:textSize="10sp"
+            android:text="y网格线:">
 
-        </EditText>
+        </TextView>
+        <com.kyleduo.switchbutton.SwitchButton
+            android:id="@+id/y_gridLine"
+            android:layout_width="60dp"
+            android:layout_height="35dp">
+
+        </com.kyleduo.switchbutton.SwitchButton>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -19,43 +19,57 @@
             android:layout_marginTop="7dp"
             android:src="@android:drawable/gallery_thumb">
         </ImageView>
-        <LinearLayout
-            android:id="@+id/layout_show_color"
+
+        <ImageView
+            android:id="@+id/image_absorb"
             android:layout_width="20dp"
-            android:layout_height="20dp">
-            <ImageView
-                android:layout_marginTop="20dp"
-                android:id="@+id/imageView_absorbcolor"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@mipmap/ic"
-                android:src="@mipmap/ic">
-            </ImageView>
-        </LinearLayout>
+            android:layout_height="20dp"
+            android:src="@mipmap/ic"
+            >
+
+        </ImageView>
+<!--    <LinearLayout
+        android:id="@+id/layout_show_color"
+        android:layout_width="20dp"
+        android:layout_height="20dp">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_beauty"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/ikun"
+            app:riv_corner_radius_bottom_left="10dp"
+            app:riv_corner_radius_bottom_right="10dp"
+            app:riv_corner_radius_top_left="10dp"
+            app:riv_corner_radius_top_right="10dp" />
+
+    </LinearLayout>-->
 
 
     </RelativeLayout>
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="355dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp" />
+    <GridView
+        android:id="@+id/grid_photo"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:numColumns="8" />
+
     <LinearLayout
         android:id="@+id/xy_layout"
         android:layout_width="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_height="66dp">
+        android:layout_marginStart="28dp"
+        android:layout_height="50dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="x坐标"
-            android:textSize="14sp">
+            android:textSize="10sp">
         </TextView>
         <EditText
             android:id="@+id/intput_X"
-            android:layout_width="50dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:focusable="false"
+            android:textSize="10sp"
             android:hint="">
 
         </EditText>
@@ -65,37 +79,51 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="y坐标"
-            android:textSize="14sp">
+            android:textSize="10sp">
 
         </TextView>
         <EditText
             android:id="@+id/intput_y"
-            android:layout_width="50dp"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:focusable="false"
+            android:textSize="10sp"
             android:hint="">
         </EditText>
+        <Button
+            android:layout_marginStart="5dp"
+            android:id="@+id/btn_pick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="pick">
 
+        </Button>
         <Button
             android:layout_marginStart="5dp"
             android:id="@+id/btn_select"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:text="select">
 
         </Button>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/rgb_layout"
         android:layout_width="309dp"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="56dp"
-        android:orientation="vertical">
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,19 +133,19 @@
 
             <TextView
                 android:id="@+id/tv_r"
-                android:layout_width="45dp"
+                android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:text="R:">
-            </TextView>
+                android:text="R:"
+                android:textSize="10sp"></TextView>
 
             <SeekBar
 
                 android:id="@+id/SeekBar_R"
                 android:layout_width="200dp"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="10dp"
                 android:progressDrawable="@drawable/seekbar_r">
 
             </SeekBar>
@@ -133,18 +161,18 @@
 
             <TextView
                 android:id="@+id/tv_g"
-                android:layout_width="45dp"
+                android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:text="G:">
-            </TextView>
+                android:text="G:"
+                android:textSize="10sp"></TextView>
 
             <SeekBar
                 android:id="@+id/SeekBar_G"
                 android:layout_width="200dp"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="10dp"
                 android:progressDrawable="@drawable/seekbar_g">
 
             </SeekBar>
@@ -160,23 +188,24 @@
 
             <TextView
                 android:id="@+id/tv_b"
-                android:layout_width="45dp"
+                android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:text="B:">
-            </TextView>
+                android:text="B:"
+                android:textSize="10sp"></TextView>
 
             <SeekBar
 
                 android:id="@+id/SeekBar_B"
                 android:layout_width="200dp"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="10dp"
                 android:progressDrawable="@drawable/seekbar_b">
 
             </SeekBar>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -187,73 +216,74 @@
 
             <TextView
                 android:id="@+id/tv_Gray"
-                android:layout_width="45dp"
+                android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:text="灰:">
+                android:text="灰:"
+                android:textSize="10sp">
 
             </TextView>
 
             <SeekBar
                 android:id="@+id/SeekBar_Gray"
                 android:layout_width="200dp"
-                android:layout_height="15dp"
+                android:layout_height="10dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="15dp"
-                android:progressDrawable="@drawable/seekbar_gray"
-                >
+                android:layout_marginStart="10dp"
+                android:progressDrawable="@drawable/seekbar_gray">
 
             </SeekBar>
         </LinearLayout>
-
     </LinearLayout>
     <LinearLayout
-        android:layout_width="355dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:orientation="vertical"
-        >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:id="@+id/image_camera"
-                android:layout_width="125dp"
-                android:layout_height="47dp"
-                android:src="@android:drawable/ic_menu_camera">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            </ImageView>
-            <ImageView
-                android:id="@+id/image_gallery"
-                android:layout_width="125dp"
-                android:layout_height="47dp"
-                android:src="@android:drawable/ic_menu_gallery">
+        <ImageView
+            android:id="@+id/image_showbigcolor"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/ic"
+            >
 
-            </ImageView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="40dp">
+        </ImageView>
+    </LinearLayout>
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/TableLayout1"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TableRow>
+            <Button
+                android:id="@+id/btn_carmera"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:text="carmera"
+                android:textSize="10sp"
+                />
+            <Button
+                android:id="@+id/btn_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="gallery"
+                android:textSize="10sp"
+                />
             <Button
                 android:id="@+id/btn_analysis"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="analysis"
                 android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btn_clear"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:text="ClearData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="clear"
                 android:textSize="10sp" />
-        </LinearLayout>
-
-    </LinearLayout>
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

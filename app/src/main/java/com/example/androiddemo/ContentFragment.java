@@ -27,6 +27,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,19 +49,29 @@ public class ContentFragment extends Fragment {
     List<Entry> scatter_entries = new ArrayList<>();//实际的
     XAxis lineChart_xAxis,scatter_xAxis;
     YAxis  lineChart_yAxis,scatter_yAxis;
+
+    boolean show_x_gridLine,show_y_gridLine;
     int xMin=-10, xMax=30, yMin=-10, yMax =120;
     String xtitle="浓度",ytitle="灰度";
     View view;
-//    public ContentFragment(List<Integer> list) {
-//        this.list=list;
-//    }
+
+    public ContentFragment(List<Integer> list) {
+        this.list=list;
+        getFittingLine(list);
+        setLine_entries(list);
+        setScatter_entries(list);
+    }
+
+    public ContentFragment(List<Integer> list1,List<Integer> list2) {
+        getFittingLine(list1);
+        setLine_entries(list1);
+        setScatter_entries(list2);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view= inflater.inflate(R.layout.fg_content, container, false);
         view.setBackgroundColor(bgColor);
         initViews();
-        getFittingLine(list);
-        initData();
         drawChart();
         return view;
     }
@@ -82,6 +93,7 @@ public class ContentFragment extends Fragment {
         tv_xTitle = view.findViewById(R.id.tv_xTitle);
         tv_yTitle = view.findViewById(R.id.tv_yTitle);
         btn_adapt=view.findViewById(R.id.btn_adapt);
+        tv_expfunction.setText("y="+b+"*X-"+a+"\nR^2="+R方);
     }
 
     public void setList(List<Integer> list) {
@@ -111,16 +123,18 @@ public class ContentFragment extends Fragment {
         R方=R_SUM01/sqrt(R_SUM02*R_SUM03);
         b=(SUM01-list.size()*AVG01*AVG02)/(SUM02-list.size()*AVG01*AVG01);
         a = AVG02-b*AVG01;
-        tv_expfunction.setText("y="+b+"*X-"+a+"\nR^2="+R方);
     }
     int getEValue(int i){
         return b*i+a;
     }
-    private void initData() {
-        for (int i = 0; i < list.size(); i++) {
+    void setLine_entries(List<Integer> list){
+        for (int i = 0; i < list.size(); i++)
             line_entries.add(new Entry(i,getEValue(i)));
-            scatter_entries.add(new Entry(i,list.get(i)-1));
-        }
+    }
+
+    void setScatter_entries(List<Integer> list){
+        for (int i = 0; i < list.size(); i++)
+            scatter_entries.add(new Entry(i,list.get(i)));
     }
     void getLocalData_AxisRange(){
         SharedPreferences sp = getActivity().getSharedPreferences("axis_sp_info", Context.MODE_PRIVATE);
@@ -128,6 +142,8 @@ public class ContentFragment extends Fragment {
         xMax = sp.getInt("xMax",0);
         yMin = sp.getInt("yMin",0);
         yMax = sp.getInt("yMax",0);
+        show_x_gridLine=sp.getBoolean("show_x_gridLine",true);
+        show_y_gridLine=sp.getBoolean("show_y_gridLine",true);
     }
     void getLocalData_AxisTitle(){
         SharedPreferences sp2 = view.getContext().getSharedPreferences("axistitle_sp_info", Context.MODE_PRIVATE);
@@ -136,7 +152,6 @@ public class ContentFragment extends Fragment {
         SharedPreferences.Editor  editor =sp2.edit();
         if (xTitle.length()!=0&&yTitle.length()!=0)
         {
-            Toast.makeText(view.getContext(),yTitle,Toast.LENGTH_SHORT).show();
             setXtitle(xTitle);
             setYtitle(yTitle);
             tv_xTitle.setText(xtitle);
@@ -148,7 +163,7 @@ public class ContentFragment extends Fragment {
         getLocalData_AxisTitle();
         //http://t.csdn.cn/ETnml
         drawScatterChart(scatter_entries);
-        drawLineChart(null);
+        drawLineChart(line_entries);
         btn_adapt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,12 +229,12 @@ public class ContentFragment extends Fragment {
 //        mv.getABR(a,b,R方);
         lineChart.setMarkerView(mv);
         //设置点上显示的值
-/*        lineDataSet.setValueFormatter(new ValueFormatter() {
+        lineDataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return value+"";
+                return "";
             }
-        });*/
+        });
         // 隐藏不希望显示部分，包括坐标轴标题、刻度等等，并禁用了双指放大等功能
         lineChart.getAxisRight().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
@@ -272,6 +287,8 @@ public class ContentFragment extends Fragment {
         xAxis.setLabelCount(xMax-xMin+1, true);//设置X轴的刻度数量
         xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);
+        //是否绘制网格线
+        xAxis.setDrawGridLines(show_x_gridLine);
         xAxis.setEnabled(true);
   /*      xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -287,6 +304,9 @@ public class ContentFragment extends Fragment {
         yAxis.setAxisMaximum(yMax);
         yAxis.setDrawGridLines(true);
         yAxis.setDrawAxisLine(true);
+
+        //是否绘制网格线
+        yAxis.setDrawGridLines(show_y_gridLine);
  /*       yAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -294,5 +314,4 @@ public class ContentFragment extends Fragment {
             }
         });*/
     }
-
 }

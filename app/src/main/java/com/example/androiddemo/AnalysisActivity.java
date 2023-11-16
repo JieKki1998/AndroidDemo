@@ -1,69 +1,50 @@
 package com.example.androiddemo;
 
-import static java.lang.Math.sqrt;
-
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.ScatterChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.data.ScatterDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnalysisActivity extends AppCompatActivity {
 
-    List<Integer> list;
+    List<Integer> list1;
     private DrawerLayout drawer_layout;
     private FrameLayout fly_content;
 
     private RightFragment fg_right_menu;
     private FragmentManager fManager;
-    //设置数据
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analysis);
+        DBUtils dbUtils=new DBUtils(this);
+        Toast.makeText(this,  dbUtils.select().toString(),Toast.LENGTH_LONG).show();
         fManager = getSupportFragmentManager();
         initViews();
         Intent intent = getIntent();
-        list= (List<Integer>) intent.getSerializableExtra("list");
-        Toast.makeText(this,list.toString(),Toast.LENGTH_LONG).show();
-        Log.i("jiejie",list+"");
-        ContentFragment cFragment1 = new ContentFragment();
-        cFragment1.setList(list);
+        list1 = (List<Integer>) intent.getSerializableExtra("list");
+        Toast.makeText(this, list1.toString(),Toast.LENGTH_LONG).show();
+//        Log.i("jiejie", list1 +"");
+        List<Integer> list2=new ArrayList<Integer>();
+        list2= list1.stream().collect(Collectors.toList());
+        ContentFragment cFragment1 = new ContentFragment(list1);
         fManager.beginTransaction().replace(R.id.fly_content,cFragment1).commit();
-        fg_right_menu.setList(list);
+        fg_right_menu.setList1(list1);
+        fg_right_menu.setList2(list2);
 
 
 

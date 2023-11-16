@@ -22,13 +22,13 @@
         android:id="@+id/btn_three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="菜单项三" />
+        android:text="model1" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_thrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="菜单项四" />
+        android:text="model2" />
 
     <Button
         android:id="@+id/button2"

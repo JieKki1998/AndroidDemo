@@ -30,8 +30,10 @@ public class MyMarkerView extends MarkerView {
     public void refreshContent(Entry e, Highlight highlight) {
 //        tvContent.setText(format.format(e.getY()));
 
-        tvContent01.setText("y="+b+"*X-"+a);
-        tvContent02.setText("R^2="+R方+"("+e.getX()+","+e.getY()+")");
+     /*   tvContent01.setText("y="+b+"*X-"+a);
+        tvContent02.setText("R^2="+R方+"("+e.getX()+","+e.getY()+")");*/
+        tvContent01.setText("");
+        tvContent02.setText("("+e.getX()+","+e.getY()+")");
         super.refreshContent(e, highlight);
     }
 
