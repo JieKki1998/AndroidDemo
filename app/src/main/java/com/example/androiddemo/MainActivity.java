@@ -38,6 +38,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     ImageView imageView_test,image_showbigcolor,image_absorb;
-    Button btn_analysis,btn_select,btn_carmer,btn_gallery,btn_pick;
+    Button btn_select,btn_pick;
     SeekBar SeekBar_R,SeekBar_G,SeekBar_B,SeekBar_Gray;
     TextView textView,tv_r,tv_g,tv_b,tv_Gray;
     LinearLayout layout_show_color;
@@ -194,13 +196,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });*/
-        btn_gallery.setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.btn_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(Intent.ACTION_PICK).setType("image/*"),PICK_PHOTO_REQUEST);
             }
         });
-        btn_analysis.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_analysis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 initList();
@@ -271,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_carmer.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_carmera).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -422,10 +425,7 @@ public class MainActivity extends AppCompatActivity {
         imageView_test = findViewById(R.id.image_test);
         image_showbigcolor=findViewById(R.id.image_showbigcolor);
         image_absorb=findViewById(R.id.image_absorb);
-        btn_analysis=findViewById(R.id.btn_analysis);
         btn_select=findViewById(R.id.btn_select);
-        btn_carmer=findViewById(R.id.btn_carmera);
-        btn_gallery=findViewById(R.id.btn_gallery);
         btn_pick=findViewById(R.id.btn_pick);
         input_x=findViewById(R.id.intput_X);
         input_y=findViewById(R.id.intput_y);
