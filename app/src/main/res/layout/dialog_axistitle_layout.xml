@@ -17,6 +17,7 @@
             android:id="@+id/et_xTitle"
             android:layout_width="100dp"
             android:layout_height="50dp"
+            android:text="浓度"
             >
 
         </EditText>
@@ -36,6 +37,7 @@
             android:id="@+id/et_yTitle"
             android:layout_width="100dp"
             android:layout_height="50dp"
+            android:text="灰度"
             >
 
         </EditText>

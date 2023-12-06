@@ -24,7 +24,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AnalysisActivity">
+        <activity android:name=".AnalysisActivity"
+            android:launchMode="singleTop">
+
+        </activity>
+        <activity android:name=".adapter.ListUpdateActivity"
+            android:launchMode="standard"
+            >
+
+        </activity>
+        <activity android:name=".UpdateListItemActivity"
+            android:launchMode="standard"
+            >
+
+        </activity>
+        <activity android:name=".HistoryActivity"
+            android:launchMode="standard">
 
         </activity>
     </application>

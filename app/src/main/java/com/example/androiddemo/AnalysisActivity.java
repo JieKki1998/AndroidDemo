@@ -1,7 +1,9 @@
 package com.example.androiddemo;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,13 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.androiddemo.entity.Grid_Item;
+import com.example.androiddemo.util.SpUtil;
+import com.example.androiddemo.util.SqlLiteUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AnalysisActivity extends AppCompatActivity {
 
-    List<Integer> list1;
+    List<Integer> list;
+    ArrayList<Grid_Item> mData;
     private DrawerLayout drawer_layout;
     private FrameLayout fly_content;
 
@@ -31,23 +37,29 @@ public class AnalysisActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_analysis);
-        DBUtils dbUtils=new DBUtils(this);
-        Toast.makeText(this,  dbUtils.select().toString(),Toast.LENGTH_LONG).show();
+        SqlLiteUtils sqlLiteUtils =new SqlLiteUtils(this);
+//        Toast.makeText(this,  sqlLiteUtils.select("2023-11-18 06:27:09").toString(),Toast.LENGTH_LONG).show();
+//        Log.i("jiejie",  sqlLiteUtils.select("2023-11-18 06:27:09").toString() +"");
         fManager = getSupportFragmentManager();
         initViews();
         Intent intent = getIntent();
-        list1 = (List<Integer>) intent.getSerializableExtra("list");
-        Toast.makeText(this, list1.toString(),Toast.LENGTH_LONG).show();
-//        Log.i("jiejie", list1 +"");
-        List<Integer> list2=new ArrayList<Integer>();
-        list2= list1.stream().collect(Collectors.toList());
-        ContentFragment cFragment1 = new ContentFragment(list1);
-        fManager.beginTransaction().replace(R.id.fly_content,cFragment1).commit();
-        fg_right_menu.setList1(list1);
-        fg_right_menu.setList2(list2);
+//        mData= (ArrayList<Grid_Item>)intent.getSerializableExtra("mData");
+        SpUtil spUtil = new SpUtil(this);
+//        Toast.makeText(this, mData.toString(),Toast.LENGTH_LONG).show();
+        ContentFragment contentFragment = new ContentFragment();
+        contentFragment.setMcontext(this);
+        fManager.beginTransaction().replace(R.id.fly_content,contentFragment).commit();
+//        fg_right_menu.setList1(list1);
+//        fg_right_menu.setList2(list2);
+    }
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("AnalysisActivity", "onResume: ");
+        ContentFragment contentFragment = new ContentFragment();
+        contentFragment.setMcontext(this);
+        fManager.beginTransaction().replace(R.id.fly_content,contentFragment).commit();
     }
 
     private void initViews() {

@@ -10,29 +10,23 @@
         android:id="@+id/btn_one"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="标题" />
+        android:text="title" />
 
     <Button
         android:id="@+id/btn_two"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="xy轴" />
+        android:text="axis" />
 
     <Button
         android:id="@+id/btn_three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="model1" />
+        android:text="fake" />
 
     <Button
-        android:id="@+id/btn_thrid"
+        android:id="@+id/save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="model2" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="菜单项五" />
+        android:text="save" />
 </LinearLayout>

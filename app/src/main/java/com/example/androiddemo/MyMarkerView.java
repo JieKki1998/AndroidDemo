@@ -11,13 +11,12 @@ import com.github.mikephil.charting.utils.MPPointF;
 import java.text.DecimalFormat;
 
 public class MyMarkerView extends MarkerView {
-    int a=0;
-    int b=0;
-    double R方=0;
+    float a=0, b=0;
+    float R方=0;
     private TextView tvContent01,tvContent02;
     private DecimalFormat format = new DecimalFormat("##0");
 
-    public MyMarkerView(Context context,int a,int b,double R方) {
+    public MyMarkerView(Context context,float a,float b,float R方) {
         super(context, R.layout.layout_markerview);
         this.a= a;
         this.b= b;

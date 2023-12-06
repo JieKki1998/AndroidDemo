@@ -5,14 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -37,27 +35,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.example.androiddemo.adapter.MyGridAdapter;
+import com.example.androiddemo.entity.Grid_Item;
+import com.example.androiddemo.util.SqlLiteUtils;
+import com.example.androiddemo.util.PermissionUtil;
+import com.example.androiddemo.util.SpUtil;
+import com.example.androiddemo.util.Utils;
 
 import java.io.FileNotFoundException;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    ImageView imageView_test,image_showbigcolor,image_absorb;
-    Button btn_select,btn_pick;
+    ImageView img_showPicture,image_showbigcolor,image_absorb;
+    Button btn_select_color, btn_auto_pick;
     SeekBar SeekBar_R,SeekBar_G,SeekBar_B,SeekBar_Gray;
     TextView textView,tv_r,tv_g,tv_b,tv_Gray;
     LinearLayout layout_show_color;
     Bitmap targetBitmap;
     Intent data1;
-    EditText input_x,input_y;
+    EditText editText_initial_concentration, editText_step;
     int x,y;
     int dstX,dstY;
     int TAKE_PHOTO_REQUEST = 10010;
@@ -67,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
     boolean ifupdatecolor=false;
     int updateIndex=0;
-    List<Integer> list = new ArrayList<>();
     //读写权限
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -79,33 +76,37 @@ public class MainActivity extends AppCompatActivity {
     private Context mContext;
     private GridView grid_photo;
     int grid_NumColumns=8;
-    private BaseAdapter mAdapter = null;
     private ArrayList<Grid_Item> mData = new ArrayList<Grid_Item>();
-    DBUtils dbUtils;
+    SqlLiteUtils sqlLiteUtils;
+    SpUtil spUtil;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
-        dbUtils=new DBUtils(this);
         mContext = MainActivity.this;
-        grid_photo = (GridView) findViewById(R.id.grid_photo);
-        grid_photo.setNumColumns(grid_NumColumns);
+        spUtil=new SpUtil(mContext);
+        //获取读取存储权限
+        new PermissionUtil(this).getPermission();
+        //获取数据库工具
+        sqlLiteUtils =new SqlLiteUtils(this);
+        //加载控件
+        initView();
+
+
         showGrid();
         grid_photo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 updateIndex=position;
-                Toast.makeText(mContext, "你点击了~" + (position+1) + "~项"+mData.get(position)+"size:"+mData.size(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mContext, "你点击了~" + (position+1) + "~项"+mData.get(position)+"size:"+mData.size(), Toast.LENGTH_SHORT).show();
                 initPopWindow(view);
             }
         });
 
-        getPermission();
 
-        initView();
 
-        imageView_test.setOnTouchListener(new View.OnTouchListener() {
+        img_showPicture.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 // 获取触摸点的坐标 x, y
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 // 目标点的坐标
                 float dst[] = new float[2];
                 // 获取到ImageView的matrix
-                Matrix imageMatrix = imageView_test.getImageMatrix();
+                Matrix imageMatrix = img_showPicture.getImageMatrix();
                 // 创建一个逆矩阵
                 Matrix inverseMatrix = new Matrix();
                 // 求逆，逆矩阵被赋值
@@ -135,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
 /*————————————————
                 版权声明：本文为CSDN博主「weixin_39950081」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
                 原文链接：https://blog.csdn.net/weixin_39950081/article/details/111803149*/
-                input_x.setText(dstX+"");
-                input_y.setText(dstY+"");
                 //修改imageview的位置
                 if (motionEvent.getAction()==MotionEvent.ACTION_DOWN)
                 {
@@ -196,6 +195,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });*/
+        findViewById(R.id.btn_history).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this);
+                Intent intent = new Intent(MainActivity.this,HistoryActivity.class);
+                ActivityCompat.startActivity(MainActivity.this, intent, optionsCompat.toBundle());
+            }
+        });
 
         findViewById(R.id.btn_gallery).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,24 +213,24 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_analysis).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initList();
-                if (list.size()>0)
+                if (mData.size()>0 && Utils.ifEditEmpty(mContext,editText_initial_concentration,editText_step))
                 {
+                    String s1=editText_initial_concentration.getText().toString();
+                    String s2=editText_step.getText().toString();
+                    spUtil.setFloat("initial_concentration",Float.valueOf(s1));
+                    spUtil.setFloat("step",Float.valueOf(s2));
+                    ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this);
                     Intent intent = new Intent(MainActivity.this,AnalysisActivity.class);
-                    intent.putExtra("list", (Serializable) list);
-                    startActivity(intent);
+                    spUtil.setDataList("mData",mData);
+                    ActivityCompat.startActivity(MainActivity.this, intent, optionsCompat.toBundle());
                 }
                 else Toast.makeText(MainActivity.this,"请添加数据后再进行分析",Toast.LENGTH_LONG).show();
             }
         });
 
-        btn_pick.setOnClickListener(new View.OnClickListener() {
+        btn_auto_pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i = 0; i<list.size(); i++)
-                {
-                    Log.i("btn_pick","list"+ list.get(i));
-                }
                 for(Grid_Item kk:mData)
                 {
                     Log.i("btn_pick", "mData"+(Color.red(kk.getColor())*30+Color.green(kk.getColor())*59+Color.blue(kk.getColor())*11)/100);
@@ -232,13 +239,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        btn_select.setOnClickListener(new View.OnClickListener() {
+        btn_select_color.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (targetBitmap!=null){
 //                    Log.i("btn_select", targetBitmap.toString()+"\n当前图片大小"+targetBitmap.getWidth()+","+targetBitmap.getHeight());
                     if (dstX>0&&dstY>0&&dstX<targetBitmap.getWidth()&&dstY<targetBitmap.getHeight()){
-                            Grid_Item gridItem = new Grid_Item(rgbPixel, "" + (mData.size() + 1) + "--" + 48);
+                            Grid_Item gridItem = new Grid_Item(rgbPixel, "" + (mData.size() + 1) + "");
 //                        当前是第n个数
                             int n = mData.size()+1;
                             Log.i("btn_select", "第n各数: "+n);
@@ -263,7 +270,6 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             mData.add(gridItem);
-                            dbUtils.insert(gridItem.getId_g(),gridItem.getColor(),gridItem.getItemGray(),gridItem.getiName());
                             showGrid();
                     }else {
                         Log.i("btn_select","坐标("+x+","+y+")不合法");
@@ -286,8 +292,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initPopWindow(View v) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_popip, null, false);
-        Button btn_xixi = (Button) view.findViewById(R.id.btn_xixi);
-        Button btn_hehe = (Button) view.findViewById(R.id.btn_hehe);
+        Button updateColor = (Button) view.findViewById(R.id.btn_update_color);
+        Button removeColor = (Button) view.findViewById(R.id.btn_remove_color);
         //1.构造一个PopupWindow，参数依次是加载的View，宽高
         final PopupWindow popWindow = new PopupWindow(view,
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -313,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         popWindow.showAsDropDown(v, 50, 0);
 
         //设置popupWindow里的按钮的事件
-        btn_xixi.setOnClickListener(new View.OnClickListener() {
+        updateColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "你点击了修改~", Toast.LENGTH_SHORT).show();
@@ -324,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 popWindow.dismiss();
             }
         });
-        btn_hehe.setOnClickListener(new View.OnClickListener() {
+        removeColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "你点击了清除~", Toast.LENGTH_SHORT).show();
@@ -338,97 +344,35 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * 将选择的颜色进行分组得到list
-     * list画图用的数据
-     */
-    private void initList() {
-        list=new ArrayList<>();
-        //普通的__分组
-        Map<Integer,List<Grid_Item>> groups = new HashMap<>();
-        for(Grid_Item kk:mData)
-        {
-            int id_g = kk.getId_g();
-            if (!groups.containsKey(id_g))
-            {
-                if (id_g!=-1)
-                    groups.put(id_g,new ArrayList<>());
-
-            }
-            if (id_g!=-1)
-                groups.get(id_g).add(kk);
-        }
-//           list.add(getGray(dstX,dstY));
-        Set<Map.Entry<Integer, List<Grid_Item>>> entries = groups.entrySet();
-        Iterator<Map.Entry<Integer, List<Grid_Item>>> iterator = entries.iterator();
-        while (iterator.hasNext())
-        {
-            Map.Entry<Integer, List<Grid_Item>> entry = iterator.next();
-            ArrayList<Grid_Item> values = (ArrayList<Grid_Item>) entry.getValue();
-            int SUM=0;
-            if (values.size()!=0){
-                for (Grid_Item item :values)
-                {
-
-                    SUM =SUM+item.getItemGray();
-                }
-                int AVG=SUM/values.size();
-                list.add(AVG);
-            }
-            Log.i("groups-list", list.toString());
-        }
-        Log.i("groups", groups.toString());
-        Log.i("groups", list.toString());
-
-    }
 
     private void showGrid() {
-        mAdapter = new MyAdapter<Grid_Item>(mData, R.layout.item_grid) {
+        BaseAdapter mAdapter = new MyGridAdapter<Grid_Item>(mData, R.layout.item_grid) {
             @Override
             public void bindView(ViewHolder holder, Grid_Item obj) {
                 holder.setColor(R.id.img_icon,obj.getColor());
                 holder.setText(R.id.txt_icon, obj.getiName());
             }
         };
-
         grid_photo.setAdapter(mAdapter);
     }
 
-    /**
-     * 获取存储卡读写权限
-     */
-    private void getPermission() {
-        /*获取读写权限*/
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE);
-            }
-        }
-    }
-
-    private void getTargetBitmapRGB(Bitmap targetBitmap) {
-        int rgbPixel = targetBitmap.getPixel(x, y);
-        int r,g,b,gray;
-        r=Color.red(rgbPixel);
-        g=Color.green(rgbPixel);
-        b=Color.blue(rgbPixel);
-    }
 
     private void clearData() {
-        list = new ArrayList<>();
         mData=new ArrayList<Grid_Item>();
         showGrid();
     }
 
     private void initView() {
 //        layout_show_color=findViewById(R.id.layout_show_color);
-        imageView_test = findViewById(R.id.image_test);
+        img_showPicture = findViewById(R.id.img_show_picture);
         image_showbigcolor=findViewById(R.id.image_showbigcolor);
         image_absorb=findViewById(R.id.image_absorb);
-        btn_select=findViewById(R.id.btn_select);
-        btn_pick=findViewById(R.id.btn_pick);
-        input_x=findViewById(R.id.intput_X);
-        input_y=findViewById(R.id.intput_y);
+        btn_select_color =findViewById(R.id.btn_select_color);
+        btn_auto_pick =findViewById(R.id.btn_auto_pick);
+        editText_initial_concentration =findViewById(R.id.editText_initial_concentration);
+        editText_step =findViewById(R.id.editText_step);
+        grid_photo = (GridView) findViewById(R.id.grid_photo);
+        grid_photo.setNumColumns(grid_NumColumns);//设置取色一行多少个
         //SeekBar使用http://t.csdn.cn/8gFFM
         SeekBar_R = findViewById(R.id.SeekBar_R);
         SeekBar_G = findViewById(R.id.SeekBar_G);
@@ -463,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == TAKE_PHOTO_REQUEST){
             if (data!=null){
                 targetBitmap = data.getParcelableExtra("data");
-                imageView_test.setImageBitmap(targetBitmap);
+                img_showPicture.setImageBitmap(targetBitmap);
             }
                      /*————————————————
         版权声明：本文为CSDN博主「开飞机的老舒克」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
@@ -478,12 +422,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("TAG", "从相册回传bitmap："+targetBitmap);
                     /*需要裁剪图片http://t.csdn.cn/mavhX*/
                     data1=data;
-                    imageView_test.setImageBitmap(targetBitmap);
+                    img_showPicture.setImageBitmap(targetBitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
-
 /*————————————————
             版权声明：本文为CSDN博主「Modu_MrLiu」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
             原文链接：https://blog.csdn.net/qq_20451879/article/details/70314547*/
@@ -491,14 +434,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    int getGray(int color){
-        int r,g,b,gray;
-        r=Color.red(color);
-        g=Color.green(color);
-        b=Color.blue(color);
-        gray=(r*30+g*59+b*11)/100;
-        return  gray;
-    }
     /**
      * 计算指定位置的灰度值
      * @return int 灰度值
@@ -527,6 +462,7 @@ public class MainActivity extends AppCompatActivity {
         return gray;
     }
 
+    //检查权限是否获取成功
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
