@@ -45,22 +45,28 @@ public class DialogUtils {
         customizeDialog.setView(dialogView);
         customizeDialog.setMessage("Message");
         /*初始化自定义dialog布局的控件*/
-        EditText et_xMin,et_xMax,et_yMin,et_yMax;
+        EditText et_xMin,et_xMax,et_yMin,et_yMax,et_xGranularity,et_yGranularity;
         SwitchButton x_gridLine,y_gridLine;
         SpUtil spUtil=new SpUtil(activity);
-        int xMin,xMax,yMin,yMax;
+        float xMin,xMax,yMin,yMax,xGranularity,yGranularity;
         et_xMin = dialogView.findViewById(R.id.et_xMin);
         et_xMax = dialogView.findViewById(R.id.et_xMax);
         et_yMin = dialogView.findViewById(R.id.et_yMin);
         et_yMax = dialogView.findViewById(R.id.et_yMax);
-        xMin = spUtil.getInt("xMin");
-        xMax = spUtil.getInt("xMax");
-        yMin = spUtil.getInt("yMin");
-        yMax = spUtil.getInt("yMax");
+        et_xGranularity=dialogView.findViewById(R.id.et_xGranularity);
+        et_yGranularity=dialogView.findViewById(R.id.et_yGranularity);
+        xMin = spUtil.getFloat("xMin");
+        xMax = spUtil.getFloat("xMax");
+        yMin = spUtil.getFloat("yMin");
+        yMax = spUtil.getFloat("yMax");
+        xGranularity = spUtil.getFloat("xGranularity");
+        yGranularity = spUtil.getFloat("yGranularity");
         et_xMin.setText(xMin+"");
         et_xMax.setText(xMax+"");
         et_yMin.setText(yMin+"");
         et_yMax.setText(yMax+"");
+        et_xGranularity.setText(xGranularity+"");
+        et_yGranularity.setText(yGranularity+"");
 
         boolean show_x_gridLine=false,show_y_gridLine=false;
         show_x_gridLine=spUtil.getBoolean("show_x_gridLine");
@@ -91,20 +97,25 @@ public class DialogUtils {
                         String xMax=et_xMax.getText().toString();
                         String yMin=et_yMin.getText().toString();
                         String yMax=et_yMax.getText().toString();
-
+                        String xGranularity=et_xGranularity.getText().toString();
+                        String yGranularity=et_yGranularity.getText().toString();
                         /*数据验证*/
                         String 提示信息啊="";
                         if(xMin.length()==0)提示信息啊+="xMin不能为空！请重试\n";
                         if (xMax.length()==0)提示信息啊+="xMax不能为空！请重试\n";
                         if (yMin.length()==0)提示信息啊+="yMin不能为空！请重试\n";
                         if (yMax.length()==0)提示信息啊+="yMax不能为空！请重试\n";
+                        if (xGranularity.length()==0)提示信息啊+="xGranularity不能为空！请重试\n";
+                        if (yGranularity.length()==0)提示信息啊+="yGranularity不能为空！请重试\n";
                         if (提示信息啊.length()!=0) showNormalDialog(activity,提示信息啊);
                         else {/*数据校验通过*/
 
-                            spUtil.setInt("xMin",Integer.valueOf(xMin));
-                            spUtil.setInt("xMax",Integer.valueOf(xMax));
-                            spUtil.setInt("yMin",Integer.valueOf(yMin));
-                            spUtil.setInt("yMax",Integer.valueOf(yMax));
+                            spUtil.setFloat("xMin",Float.valueOf(xMin));
+                            spUtil.setFloat("xMax",Float.valueOf(xMax));
+                            spUtil.setFloat("yMin",Float.valueOf(yMin));
+                            spUtil.setFloat("yMax",Float.valueOf(yMax));
+                            spUtil.setFloat("xGranularity",Float.valueOf(xGranularity));
+                            spUtil.setFloat("yGranularity",Float.valueOf(yGranularity));
                             fManager.beginTransaction().replace(R.id.fly_content,contentFragment).commit();
 /*————————————————
                             版权声明：本文为CSDN博主「顽石九变」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。

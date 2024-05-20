@@ -49,13 +49,13 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ImageView img_showPicture,image_showbigcolor,image_absorb;
-    Button btn_select_color, btn_auto_pick;
+    Button btn_select_color;
     SeekBar SeekBar_R,SeekBar_G,SeekBar_B,SeekBar_Gray;
     TextView textView,tv_r,tv_g,tv_b,tv_Gray;
     LinearLayout layout_show_color;
     Bitmap targetBitmap;
     Intent data1;
-    EditText editText_initial_concentration, editText_step;
+    EditText editText_initial_concentration, editText_step,editText_NCol,editText_GNum;
     int x,y;
     int dstX,dstY;
     int TAKE_PHOTO_REQUEST = 10010;
@@ -75,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
     private GridView grid_photo;
-    int grid_NumColumns=8;
+    //gridview一行几个数
+    int grid_NumColumns=11;
+    //每组几个数据
+    int grid_groupNum=3;
     private ArrayList<Grid_Item> mData = new ArrayList<Grid_Item>();
     SqlLiteUtils sqlLiteUtils;
     SpUtil spUtil;
@@ -92,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
         sqlLiteUtils =new SqlLiteUtils(this);
         //加载控件
         initView();
-
-
         showGrid();
         grid_photo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -215,10 +216,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mData.size()>0 && Utils.ifEditEmpty(mContext,editText_initial_concentration,editText_step))
                 {
-                    String s1=editText_initial_concentration.getText().toString();
-                    String s2=editText_step.getText().toString();
-                    spUtil.setFloat("initial_concentration",Float.valueOf(s1));
-                    spUtil.setFloat("step",Float.valueOf(s2));
+                    String initial_concentration=editText_initial_concentration.getText().toString();
+                    String step=editText_step.getText().toString();
+                    spUtil.setFloat("initial_concentration",Float.valueOf(initial_concentration));
+                    spUtil.setFloat("step",Float.valueOf(step));
                     ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this);
                     Intent intent = new Intent(MainActivity.this,AnalysisActivity.class);
                     spUtil.setDataList("mData",mData);
@@ -228,20 +229,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_auto_pick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for(Grid_Item kk:mData)
-                {
-                    Log.i("btn_pick", "mData"+(Color.red(kk.getColor())*30+Color.green(kk.getColor())*59+Color.blue(kk.getColor())*11)/100);
-                    Log.i("btn_pick", "mData-Id_g"+kk.getId_g()+"");
-                }
 
-            }
-        });
         btn_select_color.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                grid_NumColumns=Integer.valueOf(editText_NCol.getText().toString());
+                grid_groupNum=Integer.valueOf(editText_GNum.getText().toString());
+                grid_photo.setNumColumns(grid_NumColumns);//设置取色一行多少个
                 if (targetBitmap!=null){
 //                    Log.i("btn_select", targetBitmap.toString()+"\n当前图片大小"+targetBitmap.getWidth()+","+targetBitmap.getHeight());
                     if (dstX>0&&dstY>0&&dstX<targetBitmap.getWidth()&&dstY<targetBitmap.getHeight()){
@@ -249,10 +243,10 @@ public class MainActivity extends AppCompatActivity {
 //                        当前是第n个数
                             int n = mData.size()+1;
                             Log.i("btn_select", "第n各数: "+n);
-                            if (n<=24)
+                            if (n<=grid_groupNum*grid_NumColumns)
                             {
-                                gridItem.setId_g((n)%8);
-                                if (n%8 == 0)
+                                gridItem.setId_g((n)%grid_NumColumns);
+                                if (n%grid_NumColumns == 0)
                                 {//         获取前一个数的id_G加1
                                     Log.i("btn_select", "前一个数的id_g: "+n);
                                     int id_G = mData.get(n-2).getId_g();
@@ -260,13 +254,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             else {
-                                if (n%8 == 0)
+                                if (n%grid_NumColumns == 0)
                                 {//         获取前一个数的id_G加1
                                     Log.i("btn_select", "前一个数的id_g: "+n);
                                     int id_G = mData.get(n-2).getId_g();
                                     gridItem.setId_g(id_G+1);
                                 }else {
-                                    gridItem.setId_g(8+n%8);
+                                    gridItem.setId_g(grid_NumColumns+n%grid_NumColumns);
                                 }
                             }
                             mData.add(gridItem);
@@ -346,6 +340,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void showGrid() {
+        grid_NumColumns=Integer.valueOf(editText_NCol.getText().toString());
+        grid_groupNum=Integer.valueOf(editText_GNum.getText().toString());
+        spUtil.setInt("grid_NumColumns",grid_NumColumns);
+        spUtil.setInt("grid_groupNum",grid_groupNum);
+        grid_photo.setNumColumns(grid_NumColumns);//设置取色一行多少个
         BaseAdapter mAdapter = new MyGridAdapter<Grid_Item>(mData, R.layout.item_grid) {
             @Override
             public void bindView(ViewHolder holder, Grid_Item obj) {
@@ -368,11 +367,23 @@ public class MainActivity extends AppCompatActivity {
         image_showbigcolor=findViewById(R.id.image_showbigcolor);
         image_absorb=findViewById(R.id.image_absorb);
         btn_select_color =findViewById(R.id.btn_select_color);
-        btn_auto_pick =findViewById(R.id.btn_auto_pick);
         editText_initial_concentration =findViewById(R.id.editText_initial_concentration);
         editText_step =findViewById(R.id.editText_step);
+        //加载上次使用的浓度和步长
+        editText_initial_concentration.setText(spUtil.getFloat("initial_concentration")+"");
+        editText_step.setText(spUtil.getFloat("step")+"");
+        editText_NCol=findViewById(R.id.editText_NCol);
+        editText_GNum=findViewById(R.id.editText_GNum);
+        int nc=spUtil.getInt("grid_NumColumns");
+        if (nc!=0)
+            editText_NCol.setText(nc+"");
+        int gn=spUtil.getInt("grid_groupNum");
+        if (gn!=0)
+            editText_GNum.setText(gn+"");
+
         grid_photo = (GridView) findViewById(R.id.grid_photo);
         grid_photo.setNumColumns(grid_NumColumns);//设置取色一行多少个
+
         //SeekBar使用http://t.csdn.cn/8gFFM
         SeekBar_R = findViewById(R.id.SeekBar_R);
         SeekBar_G = findViewById(R.id.SeekBar_G);

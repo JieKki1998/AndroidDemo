@@ -45,12 +45,12 @@ android:layout_height="match_parent">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="初始浓度"
+            android:text="start"
             android:textSize="10sp">
         </TextView>
         <EditText
             android:id="@+id/editText_initial_concentration"
-            android:layout_width="30dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:textSize="10sp"
@@ -64,13 +64,13 @@ android:layout_height="match_parent">
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="步长"
+            android:text="step"
             android:textSize="10sp">
 
         </TextView>
         <EditText
             android:id="@+id/editText_step"
-            android:layout_width="30dp"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:inputType="numberDecimal"
@@ -78,15 +78,41 @@ android:layout_height="match_parent">
             android:text="2"
             android:hint="">
         </EditText>
-        <Button
-            android:layout_marginStart="5dp"
-            android:id="@+id/btn_auto_pick"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:text="pick">
+            android:layout_marginStart="15dp"
+            android:text="NCol:"
+            android:textSize="10sp">
 
-        </Button>
+        </TextView>
+        <EditText
+            android:id="@+id/editText_NCol"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:inputType="numberDecimal"
+            android:textSize="10sp"
+            android:text="8"
+            android:hint="">
+        </EditText> <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="GNum:"
+        android:textSize="10sp">
+
+    </TextView>
+        <EditText
+            android:id="@+id/editText_GNum"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:inputType="numberDecimal"
+            android:textSize="10sp"
+            android:text="3"
+            android:hint="">
+        </EditText>
         <Button
             android:layout_marginStart="5dp"
             android:id="@+id/btn_select_color"
@@ -121,7 +147,7 @@ android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/tv_r"
-                    android:layout_width="15dp"
+                    android:layout_width="30dp"
                     android:layout_height="15dp"
                     android:text="R:"
                     android:textSize="10sp"></TextView>
@@ -149,7 +175,7 @@ android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/tv_g"
-                    android:layout_width="15dp"
+                    android:layout_width="30dp"
                     android:layout_height="15dp"
                     android:text="G:"
                     android:textSize="10sp"></TextView>
@@ -176,7 +202,7 @@ android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/tv_b"
-                    android:layout_width="15dp"
+                    android:layout_width="30dp"
                     android:layout_height="15dp"
                     android:text="B:"
                     android:textSize="10sp"></TextView>
@@ -204,7 +230,7 @@ android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/tv_Gray"
-                    android:layout_width="15dp"
+                    android:layout_width="30dp"
                     android:layout_height="15dp"
                     android:text="灰:"
                     android:textSize="10sp">

@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context="zhangphil.demo.MainActivity"
     >
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +23,7 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:textSize="10sp"
-            android:numeric="integer"
+            android:inputType="numberDecimal"
             >
 
         </EditText>
@@ -38,7 +39,7 @@
             android:id="@+id/et_xMax"
             android:layout_width="70dp"
             android:layout_height="50dp"
-            android:numeric="integer"
+            android:inputType="numberDecimal"
             >
 
         </EditText>
@@ -57,7 +58,6 @@
 
         </com.kyleduo.switchbutton.SwitchButton>
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
             android:layout_width="70dp"
             android:layout_height="50dp"
             android:textSize="10sp"
-            android:numeric="integer"
+            android:inputType="numberDecimal"
             >
 
         </EditText>
@@ -87,7 +87,7 @@
             android:id="@+id/et_yMax"
             android:layout_width="70dp"
             android:layout_height="50dp"
-            android:numeric="integer"
+            android:inputType="numberDecimal"
             >
 
         </EditText>
@@ -106,6 +106,38 @@
 
         </com.kyleduo.switchbutton.SwitchButton>
 
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="xGranularity:"></TextView>
+        <EditText
+            android:id="@+id/et_xGranularity"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:textSize="10sp"
+            android:inputType="numberDecimal"
+            >
+        </EditText>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="yGranularity:"></TextView>
+        <EditText
+            android:id="@+id/et_yGranularity"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:textSize="10sp"
+            android:inputType="numberDecimal"
+            >
+        </EditText>
     </LinearLayout>
 
 </LinearLayout>

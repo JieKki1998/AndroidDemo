@@ -1,5 +1,9 @@
 package com.example.androiddemo;
 
+import static com.example.androiddemo.util.DialogUtils.ShowEditAxisDialog;
+import static com.example.androiddemo.util.DialogUtils.ShowEditAxisTitleDialog;
+import static com.example.androiddemo.util.DialogUtils.showSaveDialog;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +16,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.androiddemo.adapter.ListUpdateActivity;
 import com.example.androiddemo.entity.Grid_Item;
 import com.example.androiddemo.util.SpUtil;
 import com.example.androiddemo.util.SqlLiteUtils;
@@ -91,7 +98,27 @@ public class AnalysisActivity extends AppCompatActivity {
         fg_right_menu.setDrawerLayout(drawer_layout);
     }
 
+    public void EditAxisTitle(View view) {
+        ContentFragment cFragment1 = new ContentFragment();
+        ShowEditAxisTitleDialog((AppCompatActivity) drawer_layout.getContext(),cFragment1,fManager);
+    }
 
+    public void FitData(View view) {
+        ActivityOptionsCompat options11 = ActivityOptionsCompat.makeSceneTransitionAnimation((AppCompatActivity) drawer_layout.getContext());
+        Intent intent=new Intent((AppCompatActivity) drawer_layout.getContext(), ListUpdateActivity.class);
+        ActivityCompat.startActivity((AppCompatActivity) drawer_layout.getContext(), intent, options11.toBundle());
+    }
+
+
+    public void EditAxis(View view) {
+        ContentFragment cFragment = new ContentFragment();
+        ShowEditAxisDialog((AppCompatActivity) drawer_layout.getContext(),cFragment,fManager);
+    }
+
+    public void SaveData(View view) {
+        showSaveDialog((AppCompatActivity) drawer_layout.getContext(),"保存");
+        fManager.beginTransaction().replace(R.id.fly_content, new ContentFragment()).commit();
+    }
 
 
 

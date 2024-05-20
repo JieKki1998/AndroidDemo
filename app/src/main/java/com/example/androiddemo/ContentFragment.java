@@ -56,7 +56,7 @@ public class ContentFragment extends Fragment {
     YAxis  lineChart_yAxis,scatter_yAxis;
 
     boolean show_x_gridLine,show_y_gridLine;
-    int xMin=0, xMax=10, yMin=0, yMax =200;
+    float xMin=0, xMax=10, yMin=0, yMax =200;
     Float initialConcentration,step ;//初始浓度与浓度步长
     String xtitle="浓度",ytitle="灰度";
     View view;
@@ -122,7 +122,7 @@ public class ContentFragment extends Fragment {
      */
     private void getFittingLine(ArrayList<Integer>  list) {
         Log.i("ContentFragment", "getFittingLine: "+list);
-        float SUM_XiYi=0,SUM_Xi=0,SUM_Yi=0,SUM_XiXi=0,AVG_X=0,AVG_Y=0,SSReg=0,SST=0;
+        float SUM_XiYi=0,SUM_Xi=0,SUM_Yi=0,SUM_XiXi=0,AVG_X=0,AVG_Y=0,SSR=0,SST=0;
         int n=list.size();
         for (int i = 0; i < n; i++) {
             float xi=initialConcentration+i*step;
@@ -141,13 +141,13 @@ public class ContentFragment extends Fragment {
             float xi=initialConcentration+i*step;
             float yi=list.get(i);
             float y尖=b*xi+a;
-            SSReg+=((y尖-AVG_Y)*(y尖-AVG_Y));
-            SST +=((yi-AVG_Y)*(yi-AVG_Y));
+            SSR =SSR + ((y尖-AVG_Y)*(y尖-AVG_Y));
+            SST =SST + ((yi-AVG_Y)*(yi-AVG_Y));
         }
-        Log.i("ContentFragment", "getFittingLine: "+"SUM_XiYi:"+SUM_XiYi+","+"SUM_XiYi:"+SUM_Xi+","+"SUM_Xi:"+SUM_Yi+","+"SUM_XiXi:"+SUM_XiXi+","+"AVG_X:"+AVG_X+","+"AVG_Y:"+AVG_Y+","+"SSReg:"+SSReg+","+"SST:"+SST+"");
-        Log.i("ContentFragment", "getFittingLine: "+"b:"+b+","+"a:"+a+","+"SUM_Xi:"+SUM_Yi+","+"SUM_XiXi:"+SUM_XiXi+","+"AVG_X:"+AVG_X+","+"AVG_Y:"+AVG_Y+","+"SSReg:"+SSReg+","+"SST:"+SST+"");
+        Log.i("ContentFragment", "getFittingLine: "+"SUM_XiYi:"+SUM_XiYi+","+"SUM_XiYi:"+SUM_Xi+","+"SUM_Xi:"+SUM_Yi+","+"SUM_XiXi:"+SUM_XiXi+","+"AVG_X:"+AVG_X+","+"AVG_Y:"+AVG_Y+","+"SSR:"+SSR+","+"SST:"+SST+"");
+        Log.i("ContentFragment", "getFittingLine: "+"b:"+b+","+"a:"+a+","+"SUM_Xi:"+SUM_Yi+","+"SUM_XiXi:"+SUM_XiXi+","+"AVG_X:"+AVG_X+","+"AVG_Y:"+AVG_Y+","+"SSR:"+SSR+","+"SST:"+SST+"");
 
-        RR =1-SSReg/SST;
+        RR =(SSR/SST);
         tv_expfunction.setText("y="+b+"*X+"+a+"\nR^2="+ RR);
     }
     float getEValue(float xi){
@@ -155,7 +155,7 @@ public class ContentFragment extends Fragment {
     }
     void setLine_entries(List<Integer> list){
         for (int i = 0; i < list.size(); i++)
-            line_entries.add(new Entry(initialConcentration+i*step,getEValue(i)));
+            line_entries.add(new Entry(initialConcentration+i*step,getEValue(initialConcentration+i*step)));
         Log.i("ContentFragment", "setLine_entries: "+line_entries);
     }
 
@@ -171,13 +171,13 @@ public class ContentFragment extends Fragment {
         /**
          * 加载坐标轴
          */
-        if (spUtil.getInt("xMax")!=0){
-            xMin = spUtil.getInt("xMin");
-            xMax = spUtil.getInt("xMax");
+        if (spUtil.getFloat("xMax")!=0){
+            xMin = spUtil.getFloat("xMin");
+            xMax = spUtil.getFloat("xMax");
         }
-        if (spUtil.getInt("yMax")!=0){
-            yMin = spUtil.getInt("yMin");
-            yMax = spUtil.getInt("yMax");
+        if (spUtil.getFloat("yMax")!=0){
+            yMin = spUtil.getFloat("yMin");
+            yMax = spUtil.getFloat("yMax");
         }
         /**
          * 加载初始浓度和步长
@@ -339,12 +339,17 @@ public class ContentFragment extends Fragment {
         xAxis.setGridColor(Color.BLACK);
         xAxis.setAxisMinimum(xMin);
         xAxis.setAxisMaximum(xMax);
-        xAxis.setLabelCount(xMax-xMin+1, true);//设置X轴的刻度数量
+//        xAxis.setLabelCount(xMax-xMin+1, true);//设置X轴的刻度数量
         xAxis.setDrawGridLines(true);
         xAxis.setDrawAxisLine(true);
         //是否绘制网格线
         xAxis.setDrawGridLines(show_x_gridLine);
         xAxis.setEnabled(true);
+        //如果设置为true那么下面方法设置最小间隔生效，默认为false
+        xAxis.setGranularityEnabled(true);
+        //设置Y轴的值之间的最小间隔。这可以用来避免价值复制当放大到一个地步，小数设置轴不再数允许区分两轴线之间的值。
+        Float xGranularity = spUtil.getFloat("xGranularity");
+        xAxis.setGranularity(xGranularity);
   /*      xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
@@ -362,6 +367,11 @@ public class ContentFragment extends Fragment {
 
         //是否绘制网格线
         yAxis.setDrawGridLines(show_y_gridLine);
+        //如果设置为true那么下面方法设置最小间隔生效，默认为false
+        yAxis.setGranularityEnabled(true);
+        //设置Y轴的值之间的最小间隔。这可以用来避免价值复制当放大到一个地步，小数设置轴不再数允许区分两轴线之间的值。
+        Float xGranularity = spUtil.getFloat("yGranularity");
+        yAxis.setGranularity(xGranularity);
  /*       yAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
